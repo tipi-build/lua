@@ -69,6 +69,14 @@ target_include_directories(lua_lib
 	PUBLIC src
 )
 
+include(CheckLibraryExists) # check_library_exists
+
+# Some platforms (e.g. Linux) need separate math library
+check_library_exists(m pow "" LIB_M_REQUIRED)
+if(LIB_M_REQUIRED)
+  target_link_libraries(lua_lib PRIVATE m)
+endif()
+
 add_executable(lua src/lua.c)
 
 target_link_libraries(lua lua_lib)
