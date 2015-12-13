@@ -1,6 +1,11 @@
-cmake_minimum_required(VERSION 3.4)
+cmake_minimum_required(VERSION 3.0)
+
+set(LUA_VERSION 5.3.2)
 
 project(lua)
+
+
+### Library ###
 
 add_library(lua_lib
 	src/lapi.c
@@ -65,27 +70,77 @@ add_library(lua_lib
 	src/lua.hpp
 )
 
+set_property(TARGET lua_lib PROPERTY VERSION ${LUA_VERSION})
+
 target_include_directories(lua_lib
-	PUBLIC src
+	PRIVATE src
 )
 
 include(CheckLibraryExists) # check_library_exists
 
+
 # Some platforms (e.g. Linux) need separate math library
 check_library_exists(m pow "" LIB_M_REQUIRED)
 if(LIB_M_REQUIRED)
-  target_link_libraries(lua_lib PRIVATE m)
+	target_link_libraries(lua_lib PRIVATE m)
 endif()
+
+
+### Interpreter ###
 
 add_executable(lua src/lua.c)
 
 target_link_libraries(lua lua_lib)
 
+
+### Compiler ###
+
 add_executable(luac src/luac.c)
 
 target_link_libraries(luac lua_lib)
 
-install(TARGETS lua_lib lua luac 
-	DESTINATION bin
-	ARCHIVE DESTINATION lib)
 
+### Installation ###
+
+install(TARGETS lua_lib lua luac
+	EXPORT LuaConfig
+	LIBRARY DESTINATION bin
+	RUNTIME DESTINATION bin
+	ARCHIVE DESTINATION lib
+	INCLUDES DESTINATION include
+)
+
+install(
+	FILES
+	src/lua.h
+    	src/lua.hpp
+    	src/lualib.h
+    	src/lauxlib.h
+    	src/luaconf.h
+
+  	DESTINATION
+    	include
+)
+
+include(CMakePackageConfigHelpers)
+
+write_basic_package_version_file(
+	"${CMAKE_CURRENT_BINARY_DIR}/Lua/LuaConfigVersion.cmake"
+	VERSION ${LUA_VERSION}
+	COMPATIBILITY AnyNewerVersion
+)
+
+install(
+	FILES
+	"${CMAKE_CURRENT_BINARY_DIR}/Lua/LuaConfigVersion.cmake"
+
+  	DESTINATION
+    	cmake
+)
+
+
+install(
+	EXPORT LuaConfig
+	DESTINATION cmake
+	NAMESPACE Lua::
+)
