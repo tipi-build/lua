@@ -103,7 +103,7 @@ target_link_libraries(luac lua_lib)
 
 install(TARGETS lua_lib lua luac
     EXPORT LuaConfig
-    LIBRARY DESTINATION bin
+    LIBRARY DESTINATION lib
     RUNTIME DESTINATION bin
     ARCHIVE DESTINATION lib
     INCLUDES DESTINATION include
