@@ -132,22 +132,24 @@ install(
 
 include(CMakePackageConfigHelpers)
 
+set(generated_dir "${CMAKE_CURRENT_BINARY_DIR}/Lua")
+
 write_basic_package_version_file(
-    "${CMAKE_CURRENT_BINARY_DIR}/Lua/LuaConfigVersion.cmake"
+    "${generated_dir}/LuaConfigVersion.cmake"
     COMPATIBILITY AnyNewerVersion
 )
 
 # Use 'targets_export_name'
 configure_package_config_file(
     "cmake/Config.cmake.in"
-    "${CMAKE_CURRENT_BINARY_DIR}/Lua/LuaConfig.cmake"
+    "${generated_dir}/LuaConfig.cmake"
     INSTALL_DESTINATION cmake
 )
 
 install(
     FILES
-    "${CMAKE_CURRENT_BINARY_DIR}/Lua/LuaConfigVersion.cmake"
-    "${CMAKE_CURRENT_BINARY_DIR}/Lua/LuaConfig.cmake"
+    "${generated_dir}/LuaConfigVersion.cmake"
+    "${generated_dir}/LuaConfig.cmake"
     DESTINATION
     cmake
 )
