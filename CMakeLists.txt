@@ -115,7 +115,15 @@ endif()
 
 ### Installation (https://github.com/forexample/package-example) ###
 
-set(targets_export_name LuaTargets)
+set(config_install_dir "lib/cmake/${PROJECT_NAME}")
+
+set(generated_dir "${CMAKE_CURRENT_BINARY_DIR}/generated")
+
+set(version_config "${generated_dir}/${PROJECT_NAME}ConfigVersion.cmake")
+set(project_config "${generated_dir}/${PROJECT_NAME}Config.cmake")
+set(targets_export_name "${PROJECT_NAME}Targets")
+set(namespace "${PROJECT_NAME}::")
+
 install(TARGETS lua_lib lua luac
     EXPORT "${targets_export_name}"
     LIBRARY DESTINATION lib
@@ -138,30 +146,24 @@ install(
 
 include(CMakePackageConfigHelpers)
 
-set(generated_dir "${CMAKE_CURRENT_BINARY_DIR}/generated")
-
 write_basic_package_version_file(
-    "${generated_dir}/LuaConfigVersion.cmake"
-    COMPATIBILITY AnyNewerVersion
+    "${version_config}" COMPATIBILITY AnyNewerVersion
 )
 
 # Use 'targets_export_name'
 configure_package_config_file(
     "cmake/Config.cmake.in"
-    "${generated_dir}/LuaConfig.cmake"
-    INSTALL_DESTINATION cmake
+    "${project_config}"
+    INSTALL_DESTINATION "${config_install_dir}"
 )
 
 install(
-    FILES
-    "${generated_dir}/LuaConfigVersion.cmake"
-    "${generated_dir}/LuaConfig.cmake"
-    DESTINATION
-    cmake
+    FILES "${project_config}" "${version_config}"
+    DESTINATION "${config_install_dir}"
 )
 
 install(
     EXPORT "${targets_export_name}"
-    DESTINATION cmake
-    NAMESPACE Lua::
+    NAMESPACE "${namespace}"
+    DESTINATION "${config_install_dir}"
 )
