@@ -132,7 +132,7 @@ install(
 
 include(CMakePackageConfigHelpers)
 
-set(generated_dir "${CMAKE_CURRENT_BINARY_DIR}/Lua")
+set(generated_dir "${CMAKE_CURRENT_BINARY_DIR}/generated")
 
 write_basic_package_version_file(
     "${generated_dir}/LuaConfigVersion.cmake"
