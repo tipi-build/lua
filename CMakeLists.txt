@@ -105,6 +105,12 @@ if(is_linux)
       PROPERTIES
       INSTALL_RPATH "\$ORIGIN/../lib"
   )
+elseif(APPLE)
+  set_target_properties(
+      lua luac
+      PROPERTIES
+      INSTALL_RPATH "@executable_path/../lib"
+  )
 endif()
 
 ### Installation (https://github.com/forexample/package-example) ###
