@@ -1,6 +1,6 @@
 cmake_minimum_required(VERSION 3.0)
 
-project(lua VERSION 5.3.2)
+project(Lua VERSION 5.3.2)
 
 
 ### Library ###
@@ -68,7 +68,7 @@ add_library(lua_lib
     src/lua.hpp
 )
 
-set_property(TARGET lua_lib PROPERTY VERSION ${lua_VERSION})
+set_property(TARGET lua_lib PROPERTY VERSION ${Lua_VERSION})
 
 target_include_directories(lua_lib
     PUBLIC
