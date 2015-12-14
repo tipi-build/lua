@@ -71,7 +71,8 @@ add_library(lua_lib
 set_property(TARGET lua_lib PROPERTY VERSION ${lua_VERSION})
 
 target_include_directories(lua_lib
-    PRIVATE src
+    PUBLIC
+    "$<BUILD_INTERFACE:${CMAKE_CURRENT_LIST_DIR}/src>"
 )
 
 include(CheckLibraryExists) # check_library_exists
