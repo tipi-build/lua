@@ -107,10 +107,11 @@ if(is_linux)
   )
 endif()
 
-### Installation ###
+### Installation (https://github.com/forexample/package-example) ###
 
+set(targets_export_name LuaTargets)
 install(TARGETS lua_lib lua luac
-    EXPORT LuaConfig
+    EXPORT "${targets_export_name}"
     LIBRARY DESTINATION lib
     RUNTIME DESTINATION bin
     ARCHIVE DESTINATION lib
@@ -136,17 +137,23 @@ write_basic_package_version_file(
     COMPATIBILITY AnyNewerVersion
 )
 
+# Use 'targets_export_name'
+configure_package_config_file(
+    "cmake/Config.cmake.in"
+    "${CMAKE_CURRENT_BINARY_DIR}/Lua/LuaConfig.cmake"
+    INSTALL_DESTINATION cmake
+)
+
 install(
     FILES
     "${CMAKE_CURRENT_BINARY_DIR}/Lua/LuaConfigVersion.cmake"
-
+    "${CMAKE_CURRENT_BINARY_DIR}/Lua/LuaConfig.cmake"
     DESTINATION
     cmake
 )
 
-
 install(
-    EXPORT LuaConfig
+    EXPORT "${targets_export_name}"
     DESTINATION cmake
     NAMESPACE Lua::
 )
