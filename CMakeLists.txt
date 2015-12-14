@@ -98,6 +98,14 @@ add_executable(luac src/luac.c)
 
 target_link_libraries(luac lua_lib)
 
+string(COMPARE EQUAL "${CMAKE_SYSTEM_NAME}" "Linux" is_linux)
+if(is_linux)
+  set_target_properties(
+      lua luac
+      PROPERTIES
+      INSTALL_RPATH "\$ORIGIN/../lib"
+  )
+endif()
 
 ### Installation ###
 
