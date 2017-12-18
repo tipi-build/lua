@@ -8,7 +8,6 @@
 ** implementation for Windows, and a stub for other systems.
 */
 
-
 #include <stdlib.h>
 #include <string.h>
 
