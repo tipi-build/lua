@@ -37,4 +37,6 @@ function(__lua_set_executable_path)
   set(LUA_EXECUTABLE "${LUA_EXECUTABLE}" PARENT_SCOPE)
 endfunction()
 
-__lua_set_executable_path()
+if(NOT "@CMAKE_CROSSCOMPILING@")
+  __lua_set_executable_path()
+endif()

@@ -76,35 +76,6 @@ if(LIB_M_REQUIRED)
   target_link_libraries(lua_lib PRIVATE m)
 endif()
 
-
-### Interpreter ###
-
-add_executable(lua src/lua.c)
-
-target_link_libraries(lua lua_lib)
-
-
-### Compiler ###
-
-add_executable(luac src/luac.c)
-
-target_link_libraries(luac lua_lib)
-
-string(COMPARE EQUAL "${CMAKE_SYSTEM_NAME}" "Linux" is_linux)
-if(is_linux)
-  set_target_properties(
-      lua luac
-      PROPERTIES
-      INSTALL_RPATH "\$ORIGIN/../lib"
-  )
-elseif(APPLE)
-  set_target_properties(
-      lua luac
-      PROPERTIES
-      INSTALL_RPATH "@executable_path/../lib"
-  )
-endif()
-
 ### Installation (https://github.com/forexample/package-example) ###
 
 set(config_install_dir "lib/cmake/${PROJECT_NAME}")
@@ -116,7 +87,7 @@ set(project_config "${generated_dir}/${PROJECT_NAME}Config.cmake")
 set(targets_export_name "${PROJECT_NAME}Targets")
 set(namespace "${PROJECT_NAME}::")
 
-install(TARGETS lua_lib lua luac
+install(TARGETS lua_lib
     EXPORT "${targets_export_name}"
     LIBRARY DESTINATION lib
     RUNTIME DESTINATION bin
@@ -158,3 +129,36 @@ install(
     NAMESPACE "${namespace}"
     DESTINATION "${config_install_dir}"
 )
+
+if(NOT CMAKE_CROSSCOMPILING)
+  ### Interpreter ###
+  add_executable(lua src/lua.c)
+  target_link_libraries(lua lua_lib)
+
+  ### Compiler ###
+  add_executable(luac src/luac.c)
+  target_link_libraries(luac lua_lib)
+
+  string(COMPARE EQUAL "${CMAKE_SYSTEM_NAME}" "Linux" is_linux)
+  if(is_linux)
+    set_target_properties(
+        lua luac
+        PROPERTIES
+        INSTALL_RPATH "\$ORIGIN/../lib"
+    )
+  elseif(APPLE)
+    set_target_properties(
+        lua luac
+        PROPERTIES
+        INSTALL_RPATH "@executable_path/../lib"
+    )
+  endif()
+
+  install(TARGETS lua luac
+      EXPORT "${targets_export_name}"
+      LIBRARY DESTINATION lib
+      RUNTIME DESTINATION bin
+      ARCHIVE DESTINATION lib
+      INCLUDES DESTINATION include
+  )
+endif()
