@@ -36,7 +36,20 @@ static int os_pushresult (lua_State *L, int i, const char *filename) {
 
 
 static int os_execute (lua_State *L) {
-  lua_pushinteger(L, system(luaL_optstring(L, 1, NULL)));
+  const char* s = luaL_optstring(L, 1, NULL);
+  int result;
+#if defined(__APPLE__) && defined(__MACH__) && defined(__ENVIRONMENT_IPHONE_OS_VERSION_MIN_REQUIRED__)
+  // Not available since iOS SDK 11.0
+  if(s) {
+    result = -1;
+  }
+  else {
+    result = 0;
+  }
+#else
+  result = system(s);
+#endif
+  lua_pushinteger(L, result);
   return 1;
 }
 
